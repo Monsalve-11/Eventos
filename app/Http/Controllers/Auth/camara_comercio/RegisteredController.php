@@ -13,8 +13,7 @@ class RegisteredController extends Controller
 {
     public function showRegistrationForm()
     {
-      return Inertia::render('auth/camara_comercio/register');
-
+        return Inertia::render('auth/camara_comercio/register');
     }
 
     public function register(Request $request)
@@ -22,7 +21,7 @@ class RegisteredController extends Controller
         // Validar los datos del formulario
         $data = $request->validate([
             'name'                  => 'required|string|max:255',
-            'email'                 => 'required|email|unique:companies',
+            'email'                 => 'required|email|unique:camara_comercios', // Cambié a 'camara_comercios'
             'password'              => 'required|confirmed|min:8',
         ]);
 

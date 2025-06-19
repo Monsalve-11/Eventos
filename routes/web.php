@@ -12,15 +12,15 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\AppearanceController;
 use App\Http\Controllers\CompanyDashboardController;
-
+use App\Http\Controllers\Auth\amara_comercioDashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 // routes camara_comercio companies
 
 use App\Http\Controllers\Auth\camara_comercio\RegisteredController as camara_comercioRegister;
-use App\Http\Controllers\Auth\camara_comercio\LoginController     as camara_comercioLogin;
+use App\Http\Controllers\Auth\camara_comercio\LoginController as camara_comercioLogin;
 use App\Http\Controllers\Auth\Company\RegisteredController as CompanyRegister;
-use App\Http\Controllers\Auth\Company\LoginController      as CompanyLogin;
+use App\Http\Controllers\Auth\Company\LoginController as CompanyLogin;
 
 
 // Página pública
@@ -46,7 +46,7 @@ Route::middleware(['auth:company', 'verified'])->group(function () {
 
 Route::prefix('company')->name('company.')->group(function(){
     Route::middleware('guest:company')->group(function(){
-        Route::get('login', [CompanyLogin::class, 'showLoginForm'])->name('login'); // Asegúrate de que el nombre de la ruta sea 'company.login'
+        Route::get('login', [CompanyLogin::class, 'showLoginForm'])->name('login'); 
         Route::post('login', [CompanyLogin::class, 'login']);
         Route::get('register', [CompanyRegister::class, 'showRegistrationForm'])->name('register');
         Route::post('register', [CompanyRegister::class, 'register']);
@@ -72,7 +72,7 @@ Route::prefix('camara_comercio')->name('camara_comercio.')->group(function () {
         Route::post('login', [camara_comercioLogin::class, 'login']);
         Route::get('register', [camara_comercioRegister::class, 'showRegistrationForm'])->name('register');
         Route::post('register', [camara_comercioRegister::class, 'register']);
-          Route::get('dashboard', [camara_comercioDashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard', [Camara_comercioDashboardController::class, 'index'])->name('dashboard');  // Make sure this points to the correct controller
         Route::post('logout', [camara_comercioLogin::class, 'logout'])->name('logout');
     });
 

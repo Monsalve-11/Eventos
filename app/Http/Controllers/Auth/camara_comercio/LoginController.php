@@ -1,6 +1,5 @@
 <?php
-// app/Http/Controllers/Auth/camara_comercio/LoginController.php
-namespace App\Http\Controllers\Auth\camara_comercio;
+namespace App\Http\Controllers\Auth\Camara_comercio;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -14,22 +13,25 @@ class LoginController extends Controller
         return Inertia::render('auth/camara_comercio/login');
     }
 
-   public function login(Request $request)
-{
-    // Validación de las credenciales de la empresa
-    $credentials = $request->validate([
-        'email'    => 'required|email',
-        'password' => 'required|string',
-    ]);
+    public function login(Request $request)
+    {
+        // Validación de las credenciales de la empresa
+        $credentials = $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-    // Intentar autenticar usando el guard 'camara_comercio'
-    if (Auth::guard('camara_comercio')->attempt($credentials, $request->boolean('remember'))) {
-        $request->session()->regenerate();  // Regenerar la sesión para prevenir fijación de sesión
-        return redirect()->intended(route('camara_comercio.dashboard'));  // Redirigir a dashboard de la empresa
+        // Intentar autenticar usando el guard 'camara_comercio'
+        if (Auth::guard('camara_comercio')->attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();  // Regenerar la sesión para prevenir fijación de sesión
+            return redirect()->intended(route('camara_comercio.dashboard'));  // Redirigir a dashboard de la empresa
+        }
+
+        // Si no se puede autenticar
+        return back()->withErrors([
+            'email' => 'Las credenciales no coinciden con nuestros registros.',
+        ]);
     }
-
-}
-
 
     public function logout(Request $request)
     {
