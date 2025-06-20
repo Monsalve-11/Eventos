@@ -3,7 +3,6 @@ import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { Inertia } from '@inertiajs/inertia';
 import { Head } from '@inertiajs/react';
-
 import React, { useState } from 'react';
 
 const CreateEvent = () => {
@@ -25,10 +24,21 @@ const CreateEvent = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Enviar la solicitud POST a la ruta de creación de eventos
-        Inertia.post('/camara_comercio/events', form, {
+        Inertia.post(route('events.store'), form, {
             onSuccess: () => {
+                const [form, setForm] = useState({
+                    title: '',
+                    description: '',
+                    event_date: '',
+                    start_time: '',
+                    end_time: '',
+                });
                 // Si la solicitud es exitosa, redirigir a la lista de eventos
-                Inertia.get('/camara_comercio/events');
+                Inertia.get(route('camara_comercio.events'));
+            },
+            onError: () => {
+                // Si hay un error, puedes agregar un manejo de errores si es necesario
+                console.error('Error al crear el evento');
             },
         });
     };
@@ -73,7 +83,7 @@ const CreateEvent = () => {
                         </div>
 
                         {/* Botón para enviar el formulario */}
-                        <Button type="submit">Crear Eventosss</Button>
+                        <Button type="submit">Crear Evento</Button>
                     </form>
                 </div>
             </AppLayout>

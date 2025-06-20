@@ -22,7 +22,6 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        // Validación de las credenciales de la cámara de comercio
         $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required|string',
@@ -30,14 +29,13 @@ class LoginController extends Controller
 
         // Intentar autenticar usando el guard 'camara_comercio'
         if (Auth::guard('camara_comercio')->attempt($credentials, $request->boolean('remember'))) {
-            // Regenerar la sesión para prevenir fijación de sesión
             $request->session()->regenerate();
 
             // Redirigir a la página deseada o al dashboard de la cámara de comercio
             return redirect()->intended(route('camara_comercio.dashboard'));
         }
 
-        // Si la autenticación falla, redirigir de nuevo al formulario de login con un error
+        // Si la autenticación falla
         return back()->withErrors([
             'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
         ]);

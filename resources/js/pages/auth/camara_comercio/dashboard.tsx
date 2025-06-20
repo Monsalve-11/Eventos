@@ -1,8 +1,9 @@
-import { Button } from '@/components/ui/button';
+import CreateEvent from '@/components/CreateEventForm';
+import Events from '@/components/events_camara_comercio';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -10,14 +11,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
-
-type PageProps = {
-    auth: {
-        user: {
-            name: string;
-        };
-    };
-};
 
 const quickLinks = [
     { label: 'Agendar Cita', href: '/citas' },
@@ -27,25 +20,13 @@ const quickLinks = [
     { label: 'Crear Usuario', href: '/usuarios/crear' },
 ];
 
-export default function Dashboard() {
-    const { auth } = usePage<PageProps>().props;
-
+const Dashboard = () => {
     return (
         <>
-            <Head title="Dashboard" />
-
-            {/* Banner superior 1440x413 */}
-            <div className="h- max-w- relative mx-auto w-full overflow-hidden">
-                <img src="/images/banner.png" alt="Panorámica de Cúcuta" className="h-full w-full object-cover" />
-            </div>
-
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="space-y-6 p-6">
                     {/* Bienvenida */}
-                    <div className="text-xl font-semibold text-neutral-700">
-                        Hola, <span className="font-bold text-primary">{auth.user.name}</span>
-                        <br /> Bienvenido/a
-                    </div>
+                    <div className="text-xl font-semibold text-neutral-700">Hola, Bienvenido/a</div>
 
                     {/* Accesos rápidos */}
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -58,33 +39,13 @@ export default function Dashboard() {
                         ))}
                     </div>
 
-                    {/* Resumen general */}
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <Card className="p-4">
-                            <h3 className="mb-2 font-semibold">Resumen General</h3>
-                            <div className="space-y-2">
-                                <div className="text-sm text-neutral-600">
-                                    Empresas Registradas: <span className="text-green-600">101</span>
-                                </div>
-                                <div className="text-sm text-neutral-600">
-                                    Eventos Activos: <span className="text-purple-600">22</span>
-                                </div>
-                                <div className="text-sm text-neutral-600">
-                                    Citas Agendadas: <span className="text-blue-600">187</span>
-                                </div>
-                            </div>
-                            <Button className="mt-4" variant="outline">
-                                Ver detalladamente
-                            </Button>
-                        </Card>
+                    {/* Mostrar el componente de eventos */}
 
-                        <Card className="p-4">
-                            <h3 className="mb-2 font-semibold">Tasa de Usuarios Nuevos</h3>
-                            <div className="text-2xl font-bold text-red-600">54</div>
-                            <Button className="mt-4" variant="outline">
-                                Ver detalladamente
-                            </Button>
-                        </Card>
+                    <div className="mt-8">
+                        <CreateEvent />
+                    </div>
+                    <div className="mt-8">
+                        <Events />
                     </div>
 
                     {/* Banner de evento */}
@@ -95,4 +56,6 @@ export default function Dashboard() {
             </AppLayout>
         </>
     );
-}
+};
+
+export default Dashboard;
