@@ -1,6 +1,6 @@
 <?php
 // app/Http/Controllers/Auth/camara_comercio/LoginController.php
-namespace App\Http\Controllers\Auth\camara_comercio;
+namespace App\Http\Controllers\Auth\Camara_comercio;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

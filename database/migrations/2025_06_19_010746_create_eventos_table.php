@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->time('end_time');
             // Evento creado por CCC
             $table->foreignId('camara_comercio_id')
-                  ->constrained('camara_comercio')
+                  ->constrained('camara_comercios')  // Cambio aquí
                   ->onDelete('cascade');
             $table->timestamps();
         });

@@ -15,6 +15,9 @@ use App\Http\Controllers\CompanyDashboardController;
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
+
+use App\Http\Controllers\Camara_comercioDashboardController;
+
 // routes camara_comercio companies
 
 use App\Http\Controllers\Auth\camara_comercio\RegisteredController as camara_comercioRegister;
