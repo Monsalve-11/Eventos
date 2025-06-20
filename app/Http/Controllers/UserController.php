@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+     public function index()
+    {
+        $events = Event::all(); // o la consulta que necesites
+
+        return Inertia::render('User/Events', [
+          'events' => $events,
+        ]);
+    }
     // Método para mostrar el formulario de creación de usuario
     public function create()
     {
@@ -25,9 +33,6 @@ class UserController extends Controller
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
         'password' => 'required|string|min:8|confirmed',
-        'role' => 'required|in:ccc,empresa,persona_natural', // Validamos el rol
-        // Validar company_id solo si el rol es 'empresa'
-        'company_id' => $request->role === 'empresa' ? 'required|exists:companies,id' : 'nullable',
     ]);
 
     // Crear el usuario
@@ -35,12 +40,9 @@ class UserController extends Controller
         'name' => $validatedData['name'],
         'email' => $validatedData['email'],
         'password' => bcrypt($validatedData['password']),
-        'role' => $validatedData['role'],
-        // Asignar company_id solo si el rol es 'empresa'
-        'company_id' => $validatedData['role'] === 'empresa' ? $validatedData['company_id'] : null,
     ]);
 
-    return redirect()->route('dashboard')->with('success', 'Usuario creado exitosamente.');
+    return redirect()->route('events')->with('success', 'Usuario creado exitosamente.');
 }
     }
 }

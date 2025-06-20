@@ -14,8 +14,6 @@ type RegisterForm = {
     email: string;
     password: string;
     password_confirmation: string;
-    role: string;
-    company_id: string | null; // Para el caso de empresa
 };
 
 export default function Register() {
@@ -24,8 +22,6 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
-        role: 'persona_natural', // Por defecto, asignamos persona_natural
-        company_id: null, // Inicialmente vacío
     });
 
     const submit: FormEventHandler = (e) => {
@@ -108,48 +104,6 @@ export default function Register() {
                         />
                         <InputError message={errors.password_confirmation} />
                     </div>
-
-                    {/* Campo rol */}
-                    <div className="grid gap-2">
-                        <Label htmlFor="role">Role</Label>
-                        <select
-                            name="role"
-                            id="role"
-                            required
-                            value={data.role}
-                            onChange={(e) => setData('role', e.target.value)}
-                            disabled={processing}
-                            className="input"
-                        >
-                            <option value="persona_natural">Persona Natural</option>
-                            <option value="empresa">Empresa</option>
-                            <option value="ccc">CCC</option>
-                        </select>
-                        <InputError message={errors.role} />
-                    </div>
-
-                    {/* Campo empresa (solo si el rol es 'empresa') */}
-                    {data.role === 'empresa' && (
-                        <div className="grid gap-2">
-                            <Label htmlFor="company_id">Select Company</Label>
-                            <select
-                                name="company_id"
-                                id="company_id"
-                                required
-                                value={data.company_id || ''}
-                                onChange={(e) => setData('company_id', e.target.value)}
-                                disabled={processing}
-                                className="input"
-                            >
-                                <option value="">Select a company</option>
-                                {/* Replace the following with dynamic companies from your database */}
-                                <option value="1">Company 1</option>
-                                <option value="2">Company 2</option>
-                                <option value="3">Company 3</option>
-                            </select>
-                            <InputError message={errors.company_id} />
-                        </div>
-                    )}
 
                     <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

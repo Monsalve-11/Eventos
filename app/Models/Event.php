@@ -9,21 +9,18 @@ class Event extends Model
 {
     use HasFactory;
 
-    // Campos que se pueden asignar masivamente
     protected $fillable = [
-        'title',
-        'description',
-        'event_date',
-        'event_start_time',
-        'event_end_time',
-        'company_id', // Relación con la empresa principal
+        'title', 
+        'description', 
+        'event_date', 
+        'start_time', 
+        'end_time', 
+        'camara_comercio_id'
     ];
 
-    /**
-     * Relación muchos a muchos con la tabla 'companies'
-     */
-    public function companies()
+    // Relación con Camara_comercio
+    public function camara_comercio()
     {
-        return $this->belongsToMany(Company::class, 'company_event');
+        return $this->belongsTo(Camara_comercio::class);
     }
 }

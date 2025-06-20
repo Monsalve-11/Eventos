@@ -22,7 +22,7 @@ type PageProps = {
 const quickLinks = [
     { label: 'Agendar Cita', href: '/citas' },
     { label: 'Historial', href: '/historial' },
-    { label: 'Eventos', href: '/eventos' },
+    { label: 'Eventos', href: '/camara_comercio/events' },
     { label: 'Perfil', href: '/perfil' },
     { label: 'Crear Usuario', href: '/usuarios/crear' },
 ];

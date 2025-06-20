@@ -41,7 +41,7 @@ return [
     ],
       'camara_comercio' => [
         'driver' => 'session',
-        'provider' => 'camara_comercio',
+        'provider' => 'camara_comercios',
     ],
     'company' => [
         'driver' => 'session',
@@ -72,7 +72,7 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-      'camara_comercio' => [
+      'camara_comercios' => [
         'driver' => 'eloquent',
         'model' => App\Models\Camara_comercio::class,
     ],

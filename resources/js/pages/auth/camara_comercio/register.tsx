@@ -16,6 +16,10 @@ export default function camara_comercioRegister() {
 
     return (
         <>
+            {/* Banner superior 1440x413 */}
+            <div className="h- max-w- relative mx-auto w-full overflow-hidden">
+                <img src="/images/banner.png" alt="Panorámica de Cúcuta" className="h-full w-full object-cover" />
+            </div>
             <Head title="Registro camara_comercio" />
 
             <form onSubmit={submit} className="mx-auto max-w-md rounded bg-white p-6 shadow">

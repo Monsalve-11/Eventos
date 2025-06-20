@@ -33,12 +33,10 @@ export default function Dashboard() {
     return (
         <>
             <Head title="Dashboard" />
-
-            {/* Banner superior 1440x413 */}
+            {/* Banner superior 1440x413 */}Add commentMore actions
             <div className="h- max-w- relative mx-auto w-full overflow-hidden">
                 <img src="/images/banner.png" alt="Panorámica de Cúcuta" className="h-full w-full object-cover" />
             </div>
-
             <AppLayout breadcrumbs={breadcrumbs}>
                 <div className="space-y-6 p-6">
                     {/* Bienvenida */}
