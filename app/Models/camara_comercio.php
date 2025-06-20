@@ -12,7 +12,7 @@ class Camara_comercio extends Authenticatable
     use HasFactory, Notifiable;
 
     // **Le decimos la tabla exacta**
-    protected $table = 'camara_comercios';
+    protected $table = 'camara_comercio';
 
     protected $fillable = [
         'name',
