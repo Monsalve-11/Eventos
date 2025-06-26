@@ -16,4 +16,11 @@ class Evento extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
+    // Relación con las postulaciones
+    public function postulations()
+    {
+        return $this->hasMany(Postulation::class);
+    }
 }

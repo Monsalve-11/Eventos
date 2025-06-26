@@ -36,8 +36,8 @@ const Roles: React.FC<{ users: User[]; roles: Role[]; flashMessage?: string }> =
                     setModalMessage('Role assigned successfully!');
                     setShowModal(true);
                     setTimeout(() => {
-                        Inertia.visit(window.location.href); // Recargar la página para actualizar los datos
-                    }, 1500); // Esperar 1.5 segundos antes de recargar
+                        Inertia.visit(window.location.href);
+                    }, 10);
                 },
                 onError: (errors) => {
                     setModalMessage('There was an error assigning the role!');
@@ -57,8 +57,8 @@ const Roles: React.FC<{ users: User[]; roles: Role[]; flashMessage?: string }> =
                     setModalMessage('Role removed successfully!');
                     setShowModal(true);
                     setTimeout(() => {
-                        Inertia.visit(window.location.href); // Recargar la página para actualizar los datos
-                    }, 1500); // Esperar 1.5 segundos antes de recargar
+                        Inertia.visit(window.location.href);
+                    }, 10);
                 },
                 onError: (errors) => {
                     setModalMessage('There was an error removing the role!');
@@ -125,7 +125,7 @@ const Roles: React.FC<{ users: User[]; roles: Role[]; flashMessage?: string }> =
                                                     onChange={(e) => {
                                                         setUserRoles((prevRoles) => ({
                                                             ...prevRoles,
-                                                            [user.id]: Number(e.target.value), // Actualizar solo el rol del usuario específico
+                                                            [user.id]: Number(e.target.value),
                                                         }));
                                                     }}
                                                     value={userRoles[user.id] ?? ''}
