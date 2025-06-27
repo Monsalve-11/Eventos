@@ -7,19 +7,21 @@ use Inertia\Inertia;
 
 class ResponsePostulationController extends Controller
 {
-    // Mostrar las postulaciones divididas en tres secciones
-    public function index()
-    {
-        $pending = Postulation::whereNull('response')->get();  // Postulaciones pendientes (sin respuesta)
-        $accepted = Postulation::where('response', true)->get();  // Postulaciones aceptadas
-        $rejected = Postulation::where('response', false)->get();  // Postulaciones rechazadas
+// En el ResponsePostulationController.php
+public function index()
+{
+    // Obtener las postulaciones con las relaciones
+    $pending = Postulation::with(['user', 'event'])->whereNull('response')->get();
+    $accepted = Postulation::with(['user', 'event'])->where('response', true)->get();
+    $rejected = Postulation::with(['user', 'event'])->where('response', false)->get();
 
-        return Inertia::render('Postulations/ResponseIndex', [
-            'pending' => $pending,
-            'accepted' => $accepted,
-            'rejected' => $rejected,
-        ]);
-    }
+    return Inertia::render('Postulations/ResponseIndex', [
+        'pending' => $pending,
+        'accepted' => $accepted,
+        'rejected' => $rejected,
+    ]);
+}
+
 
     // Aceptar una postulación
     public function accept($postulationId)
@@ -28,6 +30,7 @@ class ResponsePostulationController extends Controller
         $postulation->response = true;  // Marcar la postulación como aceptada
         $postulation->save();
 
+        // Regresar con un mensaje de éxito
         return back()->with('success', 'Postulación aceptada.');
     }
 
@@ -38,6 +41,7 @@ class ResponsePostulationController extends Controller
         $postulation->response = false;  // Marcar la postulación como rechazada
         $postulation->save();
 
+        // Regresar con un mensaje de éxito
         return back()->with('success', 'Postulación rechazada.');
     }
 }

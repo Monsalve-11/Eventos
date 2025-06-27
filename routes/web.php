@@ -37,14 +37,14 @@ Route::post('/users/{userId}/remove-role', [UserController::class, 'removeRole']
     Route::delete('/postulations/{eventId}', [PostulationController::class, 'destroy'])->name('postulations.destroy');  // Eliminar postulación
 
 
-// Mostrar las postulaciones divididas en tres secciones
-Route::get('/response-postulations', [ResponsePostulationController::class, 'index'])->name('responsePostulations.index');  // Ver todas las postulaciones (pendientes, aceptadas, rechazadas)
+// Ruta para ver todas las postulaciones
+Route::get('/response-postulations', [ResponsePostulationController::class, 'index'])->name('responsePostulations.index');
 
-// Aceptar una postulación
-Route::post('/response-postulations/{postulationId}/accept', [ResponsePostulationController::class, 'accept'])->name('responsePostulations.accept');  // Aceptar postulación
+// Ruta para aceptar una postulación
+Route::post('/response-postulations/{postulationId}/accept', [ResponsePostulationController::class, 'accept'])->name('responsePostulations.accept');
 
-// Rechazar una postulación
-Route::post('/response-postulations/{postulationId}/reject', [ResponsePostulationController::class, 'reject'])->name('responsePostulations.reject');  // Rechazar postulación
+// Ruta para rechazar una postulación
+Route::post('/response-postulations/{postulationId}/reject', [ResponsePostulationController::class, 'reject'])->name('responsePostulations.reject');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

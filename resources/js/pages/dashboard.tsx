@@ -89,9 +89,21 @@ export default function Dashboard() {
                                 <span className="text-2xl">🚨</span>
                             </div>
                             <h3 className="text-xl font-semibold">Respuestas De Postulaciones</h3>
-                            <p className="text-center text-sm text-gray-600">Responde a las postulaciones de las empresas</p>
-                            <Link href="/postulations/ResponseIndex" className="mt-4 text-blue-600 hover:underline">
-                                Ver Postulaciones
+                            <p className="text-center text-sm text-gray-600">Responde a las postulaciones de las empresas.</p>
+                            <Link href="/response-postulations" className="mt-4 text-blue-600 hover:underline">
+                                Responder Postulaciones
+                            </Link>
+                        </div>
+
+                        {/* Tarjeta de "citas" */}
+                        <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-gray-300 bg-white p-4 shadow-md transition-all hover:shadow-lg">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-500 text-white">
+                                <span className="text-2xl">📝</span>
+                            </div>
+                            <h3 className="text-xl font-semibold">Citas</h3>
+                            <p className="text-center text-sm text-gray-600">Agenda citas con las empresas asiganadas a los eventos</p>
+                            <Link href="/citas" className="mt-4 text-blue-600 hover:underline">
+                                Agendar Citas
                             </Link>
                         </div>
                     </div>
