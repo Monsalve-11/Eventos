@@ -12,6 +12,7 @@ class Postulation extends Model
     protected $fillable = [
         'user_id',
         'event_id',
+         'response',
     ];
 
     // Relación con el modelo de User
