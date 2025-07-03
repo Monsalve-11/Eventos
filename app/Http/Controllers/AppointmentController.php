@@ -70,13 +70,13 @@ public function store(Request $request)
     {
         // Obtener los usuarios aceptados para un evento
         $acceptedUsers = Postulation::where('event_id', $eventId)
-            ->where('response', true)  // Filtrar solo los usuarios aceptados
-            ->with('user')  // Cargar la relación con el usuario
+            ->where('response', true)  // Filtrar usuarios aceptados
+            ->with('user') 
             ->get()
             ->map(function ($postulation) {
-                return $postulation->user;  // Devolver solo los usuarios aceptados
+                return $postulation->user;  // solo los usuarios aceptados
             });
 
-        return response()->json($acceptedUsers);  // Devolver la respuesta en formato JSON
+        return response()->json($acceptedUsers);  // la respuesta
     }
 }
