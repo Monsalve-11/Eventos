@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 interface Event {
     id: number;
     name: string;
+    fecha_inicio: string;
+    fecha_fin: string;
 }
 
 // Definir el tipo de Usuario
@@ -21,6 +23,7 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [users, setUsers] = useState<User[]>([]);
+    const [selectedCompany, setSelectedCompany] = useState<number | null>(null); // Para seleccionar la empresa
 
     // Función para cargar los usuarios aceptados para el evento seleccionado
     const loadUsersForEvent = async (eventId: number) => {
@@ -30,11 +33,37 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
     };
 
     const handleBookAppointment = () => {
+        if (!selectedCompany) {
+            alert('Por favor, selecciona una empresa.');
+            return;
+        }
+
+        if (new Date(selectedDate) < new Date()) {
+            alert('La fecha seleccionada no es válida');
+            return;
+        }
+
+        // Validar que la hora de inicio y fin estén dentro de las horas disponibles
+        const startDateTime = new Date(`${selectedDate}T${startTime}`);
+        const endDateTime = new Date(`${selectedDate}T${endTime}`);
+        const event = events.find((event) => event.id === selectedEvent);
+
+        if (event) {
+            const eventStartDate = new Date(`${selectedDate}T${event.fecha_inicio}`);
+            const eventEndDate = new Date(`${selectedDate}T${event.fecha_fin}`);
+
+            if (startDateTime < eventStartDate || endDateTime > eventEndDate) {
+                alert('Las horas seleccionadas no están dentro del rango del evento');
+                return;
+            }
+        }
+
         Inertia.post('/appointments', {
             event_id: selectedEvent,
             date: selectedDate,
             start_time: startTime,
             end_time: endTime,
+            company_id: selectedCompany, // ID de la empresa
         });
     };
 
@@ -71,14 +100,18 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
 
                 {selectedEvent && (
                     <>
-                        {/* Mostrar los usuarios aceptados para el evento */}
+                        {/* Mostrar las empresas aceptadas para el evento */}
                         <div className="mb-6">
                             <label className="mb-2 block text-xl font-medium text-gray-700">Selecciona la Empresa</label>
-                            <select className="w-full rounded-lg border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <select
+                                onChange={(e) => setSelectedCompany(Number(e.target.value))}
+                                value={selectedCompany ?? ''}
+                                className="w-full rounded-lg border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            >
                                 <option value="">Selecciona una Empresa</option>
                                 {users.map((user) => (
                                     <option key={user.id} value={user.id}>
-                                        {user.name}
+                                        {user.name} (ID: {user.id})
                                     </option>
                                 ))}
                             </select>
@@ -114,7 +147,7 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
                             </div>
                         </div>
 
-                        {/* Botón de Agendar Cita */}
+                        {/* Agendar Cita */}
                         {startTime && endTime && (
                             <div className="text-center">
                                 <button

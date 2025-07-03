@@ -1,5 +1,5 @@
 <?php
-
+// database/migrations/2025_06_27_161133_create_appointments_table.php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -11,12 +11,15 @@ class CreateAppointmentsTable extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');  // Referencia al usuario que hace la cita
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');  // Referencia a la empresa, que es un usuario con rol 'empresa'
-            $table->foreignId('event_id')->constrained('eventos')->onDelete('cascade');  // Referencia al evento
-            $table->date('date');  // Fecha de la cita
-            $table->time('start_time');  // Hora de inicio
-            $table->time('end_time');  // Hora de fin
+            // Persona natural que solicita la cita
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            // Empresa (también es un usuario) con rol "empresa"
+            $table->foreignId('company_id')->constrained('users')->onDelete('cascade');
+            // Evento al que se asocia la cita
+            $table->foreignId('event_id')->constrained('eventos')->onDelete('cascade');
+            $table->date('date');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->timestamps();
         });
     }
