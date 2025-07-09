@@ -50,5 +50,6 @@ Route::post('/appointments', [AppointmentController::class, 'store'])->name('app
 Route::get('/appointments/{id}', [AppointmentController::class, 'show'])->name('appointments.show');
 Route::get('/get-users-for-event/{eventId}', [AppointmentController::class, 'getUsersForEvent']);
 
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

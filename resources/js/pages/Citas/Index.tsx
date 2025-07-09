@@ -3,7 +3,6 @@ import { Inertia } from '@inertiajs/inertia';
 import { Head } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
-// Definir el tipo de Evento
 interface Event {
     id: number;
     name: string;
@@ -11,7 +10,6 @@ interface Event {
     fecha_fin: string;
 }
 
-// Definir el tipo de Usuario
 interface User {
     id: number;
     name: string;
@@ -23,9 +21,10 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [users, setUsers] = useState<User[]>([]);
-    const [selectedCompany, setSelectedCompany] = useState<number | null>(null); // Para seleccionar la empresa
+    const [selectedCompany, setSelectedCompany] = useState<number | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
 
-    // Función para cargar los usuarios aceptados para el evento seleccionado
     const loadUsersForEvent = async (eventId: number) => {
         const response = await fetch(`/get-users-for-event/${eventId}`);
         const data = await response.json();
@@ -34,16 +33,15 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
 
     const handleBookAppointment = () => {
         if (!selectedCompany) {
-            alert('Por favor, selecciona una empresa.');
+            setError('Por favor, selecciona una empresa.');
             return;
         }
 
         if (new Date(selectedDate) < new Date()) {
-            alert('La fecha seleccionada no es válida');
+            setError('La fecha seleccionada no es válida');
             return;
         }
 
-        // Validar que la hora de inicio y fin estén dentro de las horas disponibles
         const startDateTime = new Date(`${selectedDate}T${startTime}`);
         const endDateTime = new Date(`${selectedDate}T${endTime}`);
         const event = events.find((event) => event.id === selectedEvent);
@@ -53,7 +51,7 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
             const eventEndDate = new Date(`${selectedDate}T${event.fecha_fin}`);
 
             if (startDateTime < eventStartDate || endDateTime > eventEndDate) {
-                alert('Las horas seleccionadas no están dentro del rango del evento');
+                setError('Las horas seleccionadas no están dentro del rango del evento');
                 return;
             }
         }
@@ -63,8 +61,10 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
             date: selectedDate,
             start_time: startTime,
             end_time: endTime,
-            company_id: selectedCompany, // ID de la empresa
-        });
+            company_id: selectedCompany,
+        }); // Si la cita es exitosa, puedes resetear los errores y mostrar el mensaje
+        setSuccess(selectedCompany);
+        setError(null); // Reset error if successful
     };
 
     useEffect(() => {
@@ -81,6 +81,10 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
             <AppHeader />
             <Head title="Agendar Citas" />
             <div className="mx-auto mt-6 max-w-3xl rounded-xl bg-white p-6 shadow-lg">
+                {/* Error and success messages */}
+                {error && <div className="text-red-600">{error}</div>}
+                {success && <div className="text-green-600">{success}</div>}
+
                 {/* Selección de Evento */}
                 <div className="mb-6">
                     <label className="mb-2 block text-xl font-medium text-gray-700">Selecciona un Evento</label>
@@ -100,7 +104,7 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
 
                 {selectedEvent && (
                     <>
-                        {/* Mostrar las empresas aceptadas para el evento */}
+                        {/* Selección de Empresa */}
                         <div className="mb-6">
                             <label className="mb-2 block text-xl font-medium text-gray-700">Selecciona la Empresa</label>
                             <select
@@ -111,7 +115,7 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
                                 <option value="">Selecciona una Empresa</option>
                                 {users.map((user) => (
                                     <option key={user.id} value={user.id}>
-                                        {user.name} (ID: {user.id})
+                                        {user.name}
                                     </option>
                                 ))}
                             </select>

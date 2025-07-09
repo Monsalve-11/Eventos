@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,10 +11,10 @@ class Postulation extends Model
     protected $fillable = [
         'user_id',
         'event_id',
-         'response',
+        'response',
     ];
 
-    // Relación con el modelo de User
+    // Relación con el modelo de User (empresa postulada)
     public function user()
     {
         return $this->belongsTo(User::class);

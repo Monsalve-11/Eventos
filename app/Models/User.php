@@ -48,7 +48,7 @@ class User extends Authenticatable
      // Relación muchos a muchos con roles
    public function roles()
 {
-    return $this->belongsToMany(Role::class);
+     return $this->belongsToMany(Role::class);
 }
 
 }

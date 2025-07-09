@@ -45,7 +45,7 @@ const Index: React.FC<Props> = ({ eventos }) => {
                 <h1 className="mb-6 text-center text-3xl font-semibold">Lista de Eventos</h1>
 
                 <div className="mb-4 flex justify-between">
-                    <Link href="/eventos/create" className="btn btn-primary rounded-lg bg-indigo-600 px-6 py-2 text-white hover:bg-indigo-700">
+                    <Link href="/eventos/create" className="btn btn-primary rounded-lg bg-green-600 px-6 py-2 text-white hover:bg-green-700">
                         Crear Evento
                     </Link>
                 </div>
@@ -78,15 +78,15 @@ const Index: React.FC<Props> = ({ eventos }) => {
                                         <td className="px-4 py-2 text-center">
                                             <Link
                                                 href={`/eventos/${evento.id}/edit`}
-                                                className="btn btn-warning rounded-lg bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600"
+                                                className="btn btn-warning rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
                                             >
-                                                Editar
+                                                ✍️
                                             </Link>
                                             <button
                                                 onClick={() => handleDelete(evento.id)}
                                                 className="btn btn-danger ml-2 rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600"
                                             >
-                                                Eliminar
+                                                ✘
                                             </button>
                                         </td>
                                     </tr>

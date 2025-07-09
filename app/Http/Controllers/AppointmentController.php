@@ -32,37 +32,47 @@ public function store(Request $request)
 {
     // Validar los datos de la cita
     $request->validate([
-        'event_id' => 'required|exists:eventos,id', // Referencia a la tabla 'eventos'
+        'event_id' => 'required|exists:eventos,id',
         'date' => 'required|date',
         'start_time' => 'required|date_format:H:i',
-        'end_time' => 'required|date_format:H:i|after:start_time',  // Validar que la hora de fin sea posterior a la hora de inicio
-        'company_id' => 'required|exists:users,id', // Validar que la empresa exista en la base de datos
+        'end_time' => 'required|date_format:H:i|after:start_time',
+        'company_id' => 'required|exists:users,id',
     ]);
 
     // Obtener los usuarios aceptados para el evento seleccionado
     $acceptedCompanies = Postulation::where('event_id', $request->event_id)
-        ->where('response', true)  // Solo aceptados
-        ->pluck('user_id');  // Obtener los ID de las empresas aceptadas
+        ->where('response', true)
+        ->pluck('user_id');
+
+    $companyId = $request->company_id;
 
     // Verificar si la empresa seleccionada está entre las aceptadas
-    $companyId = $request->company_id;  // ID de la empresa seleccionada
-
     if (!in_array($companyId, $acceptedCompanies->toArray())) {
         return back()->with('error', 'La empresa seleccionada no está aceptada para este evento.');
     }
 
+    // Validar si la hora de inicio es antes de la hora de fin
+    $startDateTime = new \DateTime("{$request->date} {$request->start_time}");
+    $endDateTime = new \DateTime("{$request->date} {$request->end_time}");
+
+    if ($startDateTime >= $endDateTime) {
+        return back()->with('error', 'La hora de inicio debe ser antes de la hora de fin.');
+    }
+
     // Crear la cita
     Appointment::create([
-        'user_id' => auth()->id(),  // El ID del usuario (persona natural)
-        'company_id' => $request->company_id,  // El ID de la empresa seleccionada
-        'event_id' => $request->event_id,  // El ID del evento seleccionado
+        'user_id' => auth()->id(),
+        'company_id' => $companyId,
+        'event_id' => $request->event_id,
         'date' => $request->date,
         'start_time' => $request->start_time,
         'end_time' => $request->end_time,
     ]);
+    dd('Cita creada correctamente.');
 
-    return back()->with('success', 'Cita agendada correctamente.');
+     return Inertia::render('Citas');
 }
+
 
 
     // Mostrar los usuarios que se han postulado y aceptado para el evento seleccionado
