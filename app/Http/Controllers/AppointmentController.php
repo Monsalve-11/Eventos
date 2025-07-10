@@ -27,7 +27,6 @@ class AppointmentController extends Controller
         ]);
     }
 
-    // Agendar una cita para una persona natural
 public function store(Request $request)
 {
     // Validar los datos de la cita
@@ -38,6 +37,24 @@ public function store(Request $request)
         'end_time' => 'required|date_format:H:i|after:start_time',
         'company_id' => 'required|exists:users,id',
     ]);
+
+    // Verificar si ya hay una cita en ese horario para la misma empresa en el mismo evento
+    $existingAppointment = Appointment::where('event_id', $request->event_id)
+        ->where('date', $request->date)
+        ->where('company_id', $request->company_id)
+        ->where(function ($query) use ($request) {
+            $query->whereBetween('start_time', [$request->start_time, $request->end_time])
+                ->orWhereBetween('end_time', [$request->start_time, $request->end_time])
+                ->orWhere(function ($query) use ($request) {
+                    $query->where('start_time', '<', $request->start_time)
+                        ->where('end_time', '>', $request->end_time);
+                });
+        })
+        ->exists();
+
+    if ($existingAppointment) {
+        return back()->with('error', 'La empresa ya tiene una cita agendada en ese horario.');
+    }
 
     // Obtener los usuarios aceptados para el evento seleccionado
     $acceptedCompanies = Postulation::where('event_id', $request->event_id)
@@ -69,8 +86,9 @@ public function store(Request $request)
         'end_time' => $request->end_time,
     ]);
 
-     return Inertia::render('Citas/Index');
+    return redirect()->route('Citas.Index')->with('success', 'Cita agendada correctamente.');
 }
+
 
 
 

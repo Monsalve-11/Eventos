@@ -25,10 +25,51 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
+    const [eventStartDate, setEventStartDate] = useState('');
+    const [eventEndDate, setEventEndDate] = useState('');
+
     const loadUsersForEvent = async (eventId: number) => {
         const response = await fetch(`/get-users-for-event/${eventId}`);
         const data = await response.json();
         setUsers(data);
+    };
+
+    const handleEventChange = (eventId: number) => {
+        const event = events.find((event) => event.id === eventId);
+        if (event) {
+            setSelectedEvent(eventId);
+            setEventStartDate(event.fecha_inicio);
+            setEventEndDate(event.fecha_fin);
+        }
+    };
+
+    // Genera los intervalos de 20 minutos entre una hora de inicio y de fin
+    const generateTimeSlots = (startTime: string, endTime: string) => {
+        const slots = [];
+        let currentTime = new Date(`1970-01-01T${startTime}:00`);
+        const end = new Date(`1970-01-01T${endTime}:00`);
+
+        while (currentTime < end) {
+            const slot = new Date(currentTime);
+            slots.push(slot.toTimeString().slice(0, 5)); // Formato HH:mm
+            currentTime.setMinutes(currentTime.getMinutes() + 20); // Incrementar 20 minutos
+        }
+
+        return slots;
+    };
+
+    // Generar los intervalos de tiempo para la selección
+    const timeSlots = generateTimeSlots('08:00', '18:00'); // Ejemplo: de 8 AM a 6 PM
+
+    // Función para establecer la hora de fin automáticamente
+    const handleStartTimeChange = (start: string) => {
+        setStartTime(start);
+
+        // Agregar 20 minutos a la hora de inicio
+        const startDate = new Date(`1970-01-01T${start}:00`);
+        startDate.setMinutes(startDate.getMinutes() + 20);
+        const endFormatted = startDate.toTimeString().slice(0, 5); // Convertir a formato HH:mm
+        setEndTime(endFormatted);
     };
 
     const handleBookAppointment = () => {
@@ -47,10 +88,10 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
         const event = events.find((event) => event.id === selectedEvent);
 
         if (event) {
-            const eventStartDate = new Date(`${selectedDate}T${event.fecha_inicio}`);
-            const eventEndDate = new Date(`${selectedDate}T${event.fecha_fin}`);
+            const eventStartDateTime = new Date(`${selectedDate}T${event.fecha_inicio}`);
+            const eventEndDateTime = new Date(`${selectedDate}T${event.fecha_fin}`);
 
-            if (startDateTime < eventStartDate || endDateTime > eventEndDate) {
+            if (startDateTime < eventStartDateTime || endDateTime > eventEndDateTime) {
                 setError('Las horas seleccionadas no están dentro del rango del evento');
                 return;
             }
@@ -62,8 +103,8 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
             start_time: startTime,
             end_time: endTime,
             company_id: selectedCompany,
-        }); // Si la cita es exitosa, puedes resetear los errores y mostrar el mensaje
-        setSuccess(selectedCompany);
+        });
+
         setSuccess('Cita agendada con éxito');
         setError(null); // Reset error if successful
     };
@@ -90,7 +131,7 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
                 <div className="mb-6">
                     <label className="mb-2 block text-xl font-medium text-gray-700">Selecciona un Evento</label>
                     <select
-                        onChange={(e) => setSelectedEvent(Number(e.target.value))}
+                        onChange={(e) => handleEventChange(Number(e.target.value))}
                         value={selectedEvent ?? ''}
                         className="w-full rounded-lg border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     >
@@ -129,6 +170,8 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
                                 type="date"
                                 onChange={(e) => setSelectedDate(e.target.value)}
                                 value={selectedDate}
+                                min={eventStartDate}
+                                max={eventEndDate}
                                 className="w-full rounded-lg border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
@@ -137,16 +180,22 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
                         <div className="mb-6">
                             <label className="mb-2 block text-xl font-medium text-gray-700">Selecciona la Hora</label>
                             <div className="grid grid-cols-2 gap-4">
-                                <input
-                                    type="time"
-                                    onChange={(e) => setStartTime(e.target.value)}
+                                <select
+                                    onChange={(e) => handleStartTimeChange(e.target.value)}
                                     value={startTime}
                                     className="rounded-lg border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                                />
+                                >
+                                    <option value="">Hora de inicio</option>
+                                    {timeSlots.map((time, index) => (
+                                        <option key={index} value={time}>
+                                            {time}
+                                        </option>
+                                    ))}
+                                </select>
                                 <input
-                                    type="time"
-                                    onChange={(e) => setEndTime(e.target.value)}
+                                    type="text"
                                     value={endTime}
+                                    disabled
                                     className="rounded-lg border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                                 />
                             </div>
