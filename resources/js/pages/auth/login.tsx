@@ -53,7 +53,6 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 </header>
 
                 <form className="mt-2 flex w-full max-w-[400px] flex-col gap-6 rounded-xl bg-white p-6 shadow-lg" onSubmit={submit}>
-                    {' '}
                     <div className="grid gap-6">
                         <div className="grid gap-2">
                             <Label htmlFor="email" className="text-gray-700">
