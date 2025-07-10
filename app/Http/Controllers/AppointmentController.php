@@ -68,9 +68,8 @@ public function store(Request $request)
         'start_time' => $request->start_time,
         'end_time' => $request->end_time,
     ]);
-    dd('Cita creada correctamente.');
 
-     return Inertia::render('Citas');
+     return Inertia::render('Citas/Index');
 }
 
 

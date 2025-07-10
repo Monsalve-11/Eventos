@@ -64,6 +64,7 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
             company_id: selectedCompany,
         }); // Si la cita es exitosa, puedes resetear los errores y mostrar el mensaje
         setSuccess(selectedCompany);
+        setSuccess('Cita agendada con éxito');
         setError(null); // Reset error if successful
     };
 
