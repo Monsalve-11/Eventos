@@ -2,7 +2,7 @@ import { AppHeader } from '@/components/app-header';
 import { Inertia } from '@inertiajs/inertia';
 import { Head } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
-import SuccessModal from './SuccessModal'; // Import the modal component
+import SuccessModal from './SuccessModal';
 
 interface Event {
     id: number;
