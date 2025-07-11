@@ -86,8 +86,8 @@ public function store(Request $request)
         'end_time' => $request->end_time,
     ]);
 
-    return redirect()->route('Citas.Index')->with('success', 'Cita agendada correctamente.');
-}
+     return Inertia::render('Citas/Index');
+} 
 
 
 

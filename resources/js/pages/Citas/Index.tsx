@@ -2,6 +2,7 @@ import { AppHeader } from '@/components/app-header';
 import { Inertia } from '@inertiajs/inertia';
 import { Head } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import SuccessModal from './SuccessModal'; // Import the modal component
 
 interface Event {
     id: number;
@@ -24,6 +25,7 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
     const [selectedCompany, setSelectedCompany] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const [eventStartDate, setEventStartDate] = useState('');
     const [eventEndDate, setEventEndDate] = useState('');
@@ -43,7 +45,6 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
         }
     };
 
-    // Genera los intervalos de 20 minutos entre una hora de inicio y de fin
     const generateTimeSlots = (startTime: string, endTime: string) => {
         const slots = [];
         let currentTime = new Date(`1970-01-01T${startTime}:00`);
@@ -51,24 +52,21 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
 
         while (currentTime < end) {
             const slot = new Date(currentTime);
-            slots.push(slot.toTimeString().slice(0, 5)); // Formato HH:mm
-            currentTime.setMinutes(currentTime.getMinutes() + 20); // Incrementar 20 minutos
+            slots.push(slot.toTimeString().slice(0, 5));
+            currentTime.setMinutes(currentTime.getMinutes() + 20);
         }
 
         return slots;
     };
 
-    // Generar los intervalos de tiempo para la selección
-    const timeSlots = generateTimeSlots('08:00', '18:00'); // Ejemplo: de 8 AM a 6 PM
+    const timeSlots = generateTimeSlots('08:00', '18:00');
 
-    // Función para establecer la hora de fin automáticamente
     const handleStartTimeChange = (start: string) => {
         setStartTime(start);
 
-        // Agregar 20 minutos a la hora de inicio
         const startDate = new Date(`1970-01-01T${start}:00`);
         startDate.setMinutes(startDate.getMinutes() + 20);
-        const endFormatted = startDate.toTimeString().slice(0, 5); // Convertir a formato HH:mm
+        const endFormatted = startDate.toTimeString().slice(0, 5);
         setEndTime(endFormatted);
     };
 
@@ -106,7 +104,8 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
         });
 
         setSuccess('Cita agendada con éxito');
-        setError(null); // Reset error if successful
+        setIsModalVisible(true);
+        setError(null);
     };
 
     useEffect(() => {
@@ -114,6 +113,10 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
             loadUsersForEvent(selectedEvent);
         }
     }, [selectedEvent]);
+
+    const handleCloseModal = () => {
+        setIsModalVisible(false);
+    };
 
     return (
         <>
@@ -123,11 +126,9 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
             <AppHeader />
             <Head title="Agendar Citas" />
             <div className="mx-auto mt-6 max-w-3xl rounded-xl bg-white p-6 shadow-lg">
-                {/* Error and success messages */}
                 {error && <div className="text-red-600">{error}</div>}
                 {success && <div className="text-green-600">{success}</div>}
 
-                {/* Selección de Evento */}
                 <div className="mb-6">
                     <label className="mb-2 block text-xl font-medium text-gray-700">Selecciona un Evento</label>
                     <select
@@ -146,7 +147,6 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
 
                 {selectedEvent && (
                     <>
-                        {/* Selección de Empresa */}
                         <div className="mb-6">
                             <label className="mb-2 block text-xl font-medium text-gray-700">Selecciona la Empresa</label>
                             <select
@@ -163,7 +163,6 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
                             </select>
                         </div>
 
-                        {/* Selección de Fecha */}
                         <div className="mb-6">
                             <label className="mb-2 block text-xl font-medium text-gray-700">Selecciona la Fecha</label>
                             <input
@@ -176,7 +175,6 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
                             />
                         </div>
 
-                        {/* Selección de Hora */}
                         <div className="mb-6">
                             <label className="mb-2 block text-xl font-medium text-gray-700">Selecciona la Hora</label>
                             <div className="grid grid-cols-2 gap-4">
@@ -201,7 +199,6 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
                             </div>
                         </div>
 
-                        {/* Agendar Cita */}
                         {startTime && endTime && (
                             <div className="text-center">
                                 <button
@@ -215,6 +212,8 @@ const AppointmentPage = ({ events }: { events: Event[] }) => {
                     </>
                 )}
             </div>
+
+            <SuccessModal isVisible={isModalVisible} onClose={handleCloseModal} />
         </>
     );
 };
